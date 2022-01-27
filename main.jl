@@ -32,7 +32,7 @@ k = h/2
 v₁ = v₀ + k * vₜ₀
 
 
-# function step!(vₙ₊₁, vₙ, vₙ₋₁)
-#     leap_frog!(vₙ₊₁, vₙ, vₙ₋₁)
-
-# end
+function step!(vₙ, vₙ₋₁, w)
+    leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,h), k)
+    vₙ, vₙ₋₁, w = w, vₙ, vₙ₋₁
+end
