@@ -40,14 +40,25 @@ fig, ax, l = lines(points;
     )
 )
 
-record(fig, "lorenz.mp4", 1:120) do frame
-    for i in 1:50
+function update_frame!(frame)
+    for _ in 1:50
         push!(points[], step!(attractor))
         push!(colors[], frame)
     end
+
     ax.azimuth[] = 1.7pi + 0.3 * sin(2pi * frame / 120)
     notify.((points, colors))
     l.colorrange = (0, frame)
 end
+
+display(fig)
+
+frames = 1:120
+for frame ∈ frames
+    update_frame!(frame)
+    sleep(1/24)
+end
+
+# record(update_frame!, fig, "lorenz.mp4", 1:120)
 
 end # module
