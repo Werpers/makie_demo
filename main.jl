@@ -40,11 +40,12 @@ function main()
 
     ax = Axis(fig[1,1])
 
+    arrows!(ax, x, v, 0, @lift 0.1*$vₜ;
+        label="vₜ",
+    )
+
     scatter!(ax, x, v;
         label="v",
-    )
-    scatter!(ax, x, vₜ;
-        label="vₜ",
     )
 
     display(fig)
