@@ -8,7 +8,7 @@ function main()
     v₀  = map(x->sin(x/2π), x)
     vₜ₀ = map(x->0,         x)
 
-    k = h/2
+    Δt = Δx/2
 
     # First step with euler forward
     v₁ = v₀ + k * vₜ₀
@@ -21,24 +21,24 @@ function periodic_grid(xlim, N)
     return range(0, step=Δx, length=N), Δx
 end
 
-function leap_frog!(vₙ₊₁, vₙ, vₙ₋₁, f, k)
+function leap_frog!(vₙ₊₁, vₙ, vₙ₋₁, f, Δt)
     for i ∈ eachindex(vₙ)
-        vₙ₊₁[i] = 2vₙ[i] - vₙ₋₁[i] + k^2*f(vₙ, i)
+        vₙ₊₁[i] = 2vₙ[i] - vₙ₋₁[i] + Δt^2*f(vₙ, i)
     end
 end
 
-function D2(v, i, h)
+function D2(v, i, Δx)
     if i == 1
         vᵢ₋₁ = v[end]
     elseif i == length(v)
         vᵢ₊₁ = v[1]
     end
 
-    return (vᵢ₋₁ - 2v[i] + vᵢ₊₁)/h^2
+    return (vᵢ₋₁ - 2v[i] + vᵢ₊₁)/Δx^2
 end
 
 function step!(vₙ, vₙ₋₁, w)
-    leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,h), k)
+    leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,Δx), Δt)
     vₙ, vₙ₋₁, w = w, vₙ, vₙ₋₁
 end
 
