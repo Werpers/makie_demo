@@ -7,7 +7,7 @@ end
 
 function leap_frog!(vₙ₊₁, vₙ, vₙ₋₁, f, k)
     for i ∈ eachindex(vₙ)
-        vₙ₊₁[i] = 2vₙ[i] - vₙ₋₁[i] + f(vₙ, i)
+        vₙ₊₁[i] = 2vₙ[i] - vₙ₋₁[i] + k^2*f(vₙ, i)
     end
 end
 
