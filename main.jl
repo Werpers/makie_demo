@@ -11,7 +11,7 @@ function main()
     Δt = Δx/2
 
     # First step with euler forward
-    v₁ = v₀ + k * vₜ₀
+    v₁ = v₀ + Δt * vₜ₀
 end
 
 
