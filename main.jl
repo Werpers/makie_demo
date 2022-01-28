@@ -51,7 +51,7 @@ end
 
 
 function periodic_grid(xlim, N)
-    Δx = (xlim[2]-xlim[1])/(N+1)
+    Δx = (xlim[2]-xlim[1])/N
     return range(0, step=Δx, length=N), Δx
 end
 
