@@ -12,11 +12,18 @@ function leap_frog!(vₙ₊₁, vₙ, vₙ₋₁, f, k)
 end
 
 function D2(v, i, h)
-    vᵢ₋₁ = v[mod1(i-1,N)]
-    vᵢ   = v[i]
-    vᵢ₊₁ = v[mod1(i+1,N)]
+    if i == 1
+        vᵢ₋₁ = v[end]
+    elseif i == length(v)
+        vᵢ₊₁ = v[1]
+    end
 
-    return (vᵢ₋₁ - 2vᵢ + vᵢ₊₁)/h^2
+    return (vᵢ₋₁ - 2v[i] + vᵢ₊₁)/h^2
+end
+
+function step!(vₙ, vₙ₋₁, w)
+    leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,h), k)
+    vₙ, vₙ₋₁, w = w, vₙ, vₙ₋₁
 end
 
 N = 100
@@ -32,7 +39,3 @@ k = h/2
 v₁ = v₀ + k * vₜ₀
 
 
-function step!(vₙ, vₙ₋₁, w)
-    leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,h), k)
-    vₙ, vₙ₋₁, w = w, vₙ, vₙ₋₁
-end
