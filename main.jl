@@ -13,26 +13,39 @@ function main()
     # First step with euler forward
     v₁ = v₀ + Δt * vₜ₀
 
-    function step!(vₙ, vₙ₋₁, w)
+
+    # Simulation state
+    vₙ₋₁ = copy(v₀)
+    vₙ   = copy(v₁)
+    w    = similar(v₀) # Extra buffer needed to perform a step
+
+    # Observables for plotting
+    v = Observable(vₙ)
+
+    "Take simulation step and update plot state"
+    function step!()
         leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,Δx), Δt)
         vₙ, vₙ₋₁, w = w, vₙ, vₙ₋₁
+
+        v[] = vₙ
     end
 
+
+    # Setup figure
     fig = Figure()
 
-    ax_v = Axis(fig[1,1])
-    ax_vₜ = Axis(fig[2,1])
+    ax = Axis(fig[1,1])
 
-    @show x
-    @show v₀
-    lines!(ax_v, x, v₀;
+    scatter!(ax, x, v;
         label="v",
-    )
-    lines!(ax_vₜ, x, vₜ₀;
-        label="vₜ",
     )
 
     display(fig)
+
+    while true
+        step!()
+        sleep(1/24)
+    end
 end
 
 
@@ -49,9 +62,15 @@ function leap_frog!(vₙ₊₁, vₙ, vₙ₋₁, f, Δt)
 end
 
 function D2(v, i, Δx)
-    if i == 1
+    if i != 1
+        vᵢ₋₁ = v[i-1]
+    else
         vᵢ₋₁ = v[end]
-    elseif i == length(v)
+    end
+
+    if i != length(v)
+        vᵢ₊₁ = v[i+1]
+    else
         vᵢ₊₁ = v[1]
     end
 
