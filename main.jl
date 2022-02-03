@@ -1,6 +1,6 @@
 using GLMakie
 
-function main()
+function main(;animate=true)
     # Setup grid
     N = 100
     xlim = (0,1)
@@ -58,11 +58,15 @@ function main()
     # the plots will automatically update whenever they are changed, e.g by
     # the `step!` function above.
 
-    display(fig)
+    if animate
+        display(fig)
 
-    while true
-        step!()
-        sleep(1/24)
+        while true
+            step!()
+            sleep(1/24)
+        end
+    else
+        record(frame->step!(), fig, "movie.mp4", 1:(5*24))
     end
 end
 
