@@ -5,7 +5,7 @@ pkg> activate makie_example
 ```
 then include `main.jl` (possibly using Revise.jl's `includet`)
 ```julia
-julia> include(main.jl)
+julia> include("main.jl")
 ```
 and finally call the main function
 ```
