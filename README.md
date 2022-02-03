@@ -1,5 +1,5 @@
 # Makie demo
-A simple makie animation demo. Solves the periodic one dimensional wave equation and animates the solution in real time. To run first activate the julia environment,
+A simple Makie animation demo. Solves the periodic one dimensional wave equation and animates the solution in real time. To run first activate the Julia environment,
 ```julia
 pkg> activate makie_example
 ```
@@ -12,4 +12,4 @@ and finally call the main function
 julia> main()
 ```
 
-`main` takes a key word argument `animate` which defaults to `true`. If set to false a movie file will be saved instead of showing a live animation.
+`main` takes a key word argument `animate` which defaults to `true`. If set to `false` a movie file will be saved instead of showing a live animation.
