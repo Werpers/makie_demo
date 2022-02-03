@@ -1,18 +1,18 @@
 using GLMakie
 
 function main()
+    # Setup grid
     N = 100
     xlim = (0,1)
     x, Δx = periodic_grid(xlim,N)
+    Δt = Δx
 
+    # Initial conditions
     v₀  = map(x->sin(2π*x), x)
     vₜ₀ = map(x->0,         x)
 
-    Δt = Δx
-
     # First step with euler forward
     v₁ = v₀ + Δt * vₜ₀
-
 
     # Simulation state
     vₙ₋₁ = copy(v₀)
@@ -23,21 +23,27 @@ function main()
     v = Observable(vₙ)
     vₜ = Observable(copy(vₙ))
 
-    "Take simulation step and update plot state"
+
+    """
+        step!()
+
+    Take simulation step and update plot state.
+    """
     function step!()
         leap_frog!(w, vₙ, vₙ₋₁, (v,i)->D2(v,i,Δx), Δt)
-        map!((vₙ₊₁,vₙ₋₁)-> (vₙ₊₁-vₙ₋₁)/2Δt, vₜ.val, w, vₙ₋₁)
+
+        # Calculate vₜ for visualization
+        map!((vₙ₊₁,vₙ₋₁)-> (vₙ₊₁-vₙ₋₁)/2Δt, vₜ.val, w, vₙ₋₁) # vₜ = (vₙ₊₁-vₙ₋₁)/2Δt = (w-vₙ₋₁)/2Δt
 
         vₙ, vₙ₋₁, w = w, vₙ, vₙ₋₁
 
-        v[] = vₙ
-        notify(vₜ)
+        # Notify observables to cause an update of the plot
+        v[] = vₙ # Automatically notifies `v`.
+        notify(vₜ) # Needed because changing vₜ.val bypasses the automatic notification of `vₜ`.
     end
-
 
     # Setup figure
     fig = Figure()
-
     ax = Axis(fig[1,1])
 
     arrows!(ax, x, v, 0, @lift 0.1*$vₜ;
@@ -47,6 +53,10 @@ function main()
     scatter!(ax, x, v;
         label="v",
     )
+
+    # Since `arrows!` and `scatter!` are called with Observables `v` and `vₜ`
+    # the plots will automatically update whenever they are changed, e.g by
+    # the `step!` function above.
 
     display(fig)
 
