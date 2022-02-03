@@ -93,28 +93,6 @@ function D2(v, i, Δx)
     return (vᵢ₋₁ - 2v[i] + vᵢ₊₁)/Δx^2
 end
 
-function D1(v, i, Δx)
-    if i != 1
-        vᵢ₋₁ = v[i-1]
-    else
-        vᵢ₋₁ = v[end]
-    end
-
-    if i != length(v)
-        vᵢ₊₁ = v[i+1]
-    else
-        vᵢ₊₁ = v[1]
-    end
-
-    return (vᵢ₊₁ - vᵢ₋₁)/2Δx
-end
-
-function D1!(vₓ, v, Δx)
-    for i ∈ eachindex(v)
-        vₓ[i] = D1(v,i,Δx)
-    end
-end
-
 function prompt(msg = "Press [enter] to continue")
     print(msg, " ")
     return readline()
